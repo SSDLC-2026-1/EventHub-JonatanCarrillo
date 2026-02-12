@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "full_name": "sara",
+    "email": "test@tes.com",
+    "phone": "3001111111",
+    "password": "aaa111",
+    "confirm_password": "aaa111"
+  }
+]
