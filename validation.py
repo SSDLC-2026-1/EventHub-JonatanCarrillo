@@ -74,7 +74,12 @@ def validate_card_number(card_number: str) -> Tuple[str, str]:
 
     Requirements:
     - Normalize input """
-   
+    
+    card_number = unicodedata.normalize("NFKC", card_number)
+    card_number = card_number.split()
+    card_number = "".join(card_number)
+    card_number = card_number.split("-")
+    card_number = "".join(card_number)
     if not luhn_is_valid(card_number):
        return "", "Card number is not valid according to Luhn algorithm"
     
@@ -82,11 +87,7 @@ def validate_card_number(card_number: str) -> Tuple[str, str]:
     
     # TODO: Implement validation
 
-    card_number = unicodedata.normalize("NFKC", card_number)
-    card_number = card_number.split()
-    card_number = "".join(card_number)
-    card_number = card_number.split("-")
-    card_number = "".join(card_number)
+   
     if not CARD_DIGITS_RE.match(card_number):
         return "", "Numero de tarjeta no valido"
     if len(card_number) >= 13 and len(card_number) <= 19:
