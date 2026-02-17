@@ -27,7 +27,7 @@ from typing import Tuple, Dict
 
 CARD_DIGITS_RE = re.compile(r"[0-9]")     # digits only
 CVV_RE = re.compile(r"[0-9][0-9][0-9][0-9]")             # 3 or 4 digits
-EXP_RE = re.compile(r"^[0-1][0-9][2-3][0-9]")             # MM/YY format
+EXP_RE = re.compile(r"^[0-9][0-9]")             # MM/YY format
 EMAIL_BASIC_RE = re.compile(r"^[a-zA-Z0-9_@.\-]*$")     # basic email structure
 NAME_ALLOWED_RE = re.compile(r"[a-zA-z]*$")    # allowed name characters
 
@@ -147,34 +147,7 @@ def validate_cvv(cvv: str) -> Tuple[str, str]:
 
 
 def validate_billing_email(billing_email: str) -> Tuple[str, str]:
-    """
-    Validate billing email.
 
-    Requirements:
-    - Normalize (strip + lowercase)
-    billing_email = billing_email.strip().lower()
-    
-    - Max length 254
-    if len(billing_email) > 254:
-        return "", "Email is too long"
-    
-    - Must match basic email pattern
-    if not EMAIL_BASIC_RE.match(billing_email):
-        return "", "Email format is invalid"
-
-    if normalized_email != billing_email:
-        return "", "Email normalization error"
-    else: 
-        return billing_email, ""
-
-    Input:
-        billing_email (str)
-        
-
-    Returns:
-        (normalized_email, error_message)
-    """
-    # TODO: Implement validation
     billing_email = unicodedata.normalize("NFKC", billing_email)
     billing_email = billing_email.strip().lower()
     if len(billing_email) > 254:
