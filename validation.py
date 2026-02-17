@@ -25,11 +25,11 @@ from typing import Tuple, Dict
 # =============================
 
 
-CARD_DIGITS_RE = re.compile(r"")     # digits only
-CVV_RE = re.compile(r"")             # 3 or 4 digits
-EXP_RE = re.compile(r"")             # MM/YY format
-EMAIL_BASIC_RE = re.compile(r"")     # basic email structure
-NAME_ALLOWED_RE = re.compile(r"")    # allowed name characters
+CARD_DIGITS_RE = re.compile(r"[0-9]")     # digits only
+CVV_RE = re.compile(r"[0-9][0-9][0-9][0-9]")             # 3 or 4 digits
+EXP_RE = re.compile(r"^[0-1][0-9][2-3][0-9]")             # MM/YY format
+EMAIL_BASIC_RE = re.compile(r"^[a-zA-Z0-9_@.\-]*$")     # basic email structure
+NAME_ALLOWED_RE = re.compile(r"[a-zA-z]*$")    # allowed name characters
 
 
 # =============================
@@ -86,7 +86,23 @@ def validate_card_number(card_number: str) -> Tuple[str, str]:
         - If valid → return (all credit card digits, "")
     """
     # TODO: Implement validation
-    return "", ""
+
+    card_number = unicodedata.normalize("NFKC", card_number)
+    card_number = card_number.split()
+    card_number = "".join(card_number)
+    print(card_number)
+    card_number = card_number.split("-")
+    card_number = "".join(card_number)
+    print(card_number)
+    try:
+        for i in card_number:
+            a = int(i)
+    except:
+        return "", "Numero de tarjeta no valido"
+    if len(card_number) >= 13 and len(card_number) <= 19:
+        return f"{card_number}", ""
+    else:
+        return "", "Numero de tarjeta no valido"
 
 
 def validate_exp_date(exp_date: str) -> Tuple[str, str]:
@@ -126,7 +142,16 @@ def validate_cvv(cvv: str) -> Tuple[str, str]:
         (always return empty clean value for security reasons)
     """
     # TODO: Implement validation
-    return "", ""
+    try:
+        for i in cvv:
+            a = int(i)
+    except: 
+        return "", "CVV no valido"
+
+    if len(cvv) == 3 or len(cvv) == 4:
+        return "", ""
+    else:
+        return "", "CVV no valido"
 
 
 def validate_billing_email(billing_email: str) -> Tuple[str, str]:
