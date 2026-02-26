@@ -297,6 +297,10 @@ def login():
     session["user_email"] = email_clean
     return redirect(url_for("dashboard"))
 
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
