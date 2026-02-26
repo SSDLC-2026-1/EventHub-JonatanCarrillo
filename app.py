@@ -21,6 +21,11 @@ from validation import (
     validate_login_input,
 )
 
+from encryption import (
+    hash_password,
+    verify_password
+)
+
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.secret_key = "dev-secret-change-me"
@@ -284,7 +289,7 @@ def login():
         ), 403
 
     user = find_user_by_email(email_clean)
-    if not user or user.get("password") != password_raw:
+    if not user or not verify_password(password_raw, user.get("password")):
         register_failed_attempt(email_clean)
         return render_template(
             "login.html",
@@ -359,13 +364,12 @@ def register():
 
     users = load_users()
     next_id = (max([u.get("id", 0) for u in users], default=0) + 1)
-
     users.append({
         "id": next_id,
         "full_name": clean["full_name"],
         "email": clean["email"],
         "phone": clean["phone"],
-        "password": clean["password"],
+        "password": hash_password(clean["password"]),
         "role": "user",
         "status": "active",
         "locked_until": "",
