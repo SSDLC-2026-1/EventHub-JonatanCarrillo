@@ -23,8 +23,12 @@ from validation import (
 
 from encryption import (
     hash_password,
-    verify_password
+    verify_password,
+    encrypt_aes,
+    decrypt_aes
 )
+
+global_key = b'sixteen byte key'  # Clave de 16 bytes para AES-128
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -364,11 +368,12 @@ def register():
 
     users = load_users()
     next_id = (max([u.get("id", 0) for u in users], default=0) + 1)
+    
     users.append({
         "id": next_id,
         "full_name": clean["full_name"],
         "email": clean["email"],
-        "phone": clean["phone"],
+        "phone": encrypt_aes(clean["phone"], global_key),
         "password": hash_password(clean["password"]),
         "role": "user",
         "status": "active",
@@ -428,7 +433,7 @@ def checkout(event_id: int):
     form_data = {
         "exp_date": clean.get("exp_date", ""),
         "name_on_card": clean.get("name_on_card", ""),
-        "billing_email": clean.get("billing_email", ""),
+        "billing_email": encrypt_aes(clean.get("billing_email", ""), global_key),
         "card": clean.get("card", "")
     }
 
@@ -445,7 +450,7 @@ def checkout(event_id: int):
 
     orders.append({
         "id": order_id,
-        "user_email": "PLACEHOLDER@EMAIL.COM",
+        "user_email": form_data["billing_email"], 
         "event_id": event.id,
         "event_title": event.title,
         "qty": qty,
