@@ -330,7 +330,7 @@ def login():
     session["login_at"] = time()   
 
     return redirect(url_for("dashboard"))
-=======
+
 @app.route("/logout")
 def logout():
     session.clear()
@@ -463,7 +463,7 @@ def checkout(event_id: int):
     form_data = {
         "exp_date": clean.get("exp_date", ""),
         "name_on_card": clean.get("name_on_card", ""),
-        "billing_email": encrypt_aes(clean.get("billing_email", ""), global_key),
+        "billing_email": clean.get("billing_email", ""),
         "card_number": masked_display,   
     }
 
@@ -481,7 +481,7 @@ def checkout(event_id: int):
 
     orders.append({
         "id": order_id,
-        "user_email": user.get("email"),
+        "user_email": encrypt_aes(user.get("email"),global_key),
         "event_id": event.id,
         "event_title": event.title,
         "qty": qty,
@@ -505,10 +505,11 @@ def profile():
         session.clear()
         return redirect(url_for("login"))
 
+    phone = user.get("phone", "")
     form = {
         "full_name": user.get("full_name", ""),
         "email": user.get("email", ""),
-        "phone": user.get("phone", ""),
+        "phone": decrypt_aes(phone[0], phone[1], phone[2], global_key)
     }
 
     field_errors: dict[str, str] = {}
@@ -534,7 +535,7 @@ def profile():
         if err:
             field_errors["phone"] = _field_msg("phone")
         else:
-            updates["phone"] = phone_clean
+            updates["phone"] = encrypt_aes(phone_clean, global_key)
 
         if current_password or new_password or confirm_new_password:
             if not current_password or current_password != (user.get("password") or ""):
@@ -576,7 +577,7 @@ def profile():
         save_users(users)
 
         form["full_name"] = updates["full_name"]
-        form["phone"] = updates["phone"]
+        form["phone"] = decrypt_aes(updates["phone"][0], updates["phone"][1], updates["phone"][2], global_key)
         success_msg = "Perfil actualizado correctamente."
 
     return render_template(

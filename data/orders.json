@@ -197,5 +197,27 @@
       "billing_email": "tabita.sanchez@test.com",
       "card_number": "**** **** **** 9560"
     }
+  },
+  {
+    "id": 12,
+    "user_email": [
+      "c360a4d53cfd371fe1aebec4049064c20105ce",
+      "5353e82fa69e9e1f2f2f36ac4bf9d55d",
+      "79cd78f7d5d9f5e3825fa69be2012dc3"
+    ],
+    "event_id": 9,
+    "event_title": "Champions League Final Viewing",
+    "qty": 1,
+    "unit_price": 65.0,
+    "service_fee": 5.0,
+    "total": 70.0,
+    "status": "PAID",
+    "created_at": "2026-02-27T19:01:22.980634+00:00",
+    "payment": {
+      "exp_date": "08/31",
+      "name_on_card": "Alisson Mraz",
+      "billing_email": "pepeprueba@test.com",
+      "card_number": "**** **** **** 4399"
+    }
   }
 ]

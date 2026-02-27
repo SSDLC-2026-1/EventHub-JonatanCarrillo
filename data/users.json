@@ -22,9 +22,9 @@
     "full_name": "pepe",
     "email": "pepeprueba@test.com",
     "phone": [
-      "2325fd94a4ba4a5e8ef2",
-      "2a84c1777a25ec4602a4da2e0fe8b515",
-      "4b51d5d23edae17a9dcf301cabb54acc"
+      "73af7d20e10d14735970",
+      "bd08e075e858b1474978b0ac09029825",
+      "be1ea884f4ea05f2679d9179dc3d18bf"
     ],
     "password": {
       "algorithm": "pbkdf2_sha256",
