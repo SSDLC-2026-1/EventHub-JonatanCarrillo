@@ -154,10 +154,10 @@ def verify_password(password, stored_data):
 
     return hmac.compare_digest(hash_bytes.hex(), stored_hash)
 
-
+'''
 
 if __name__ == "__main__":
-
+    
     print("=== PRUEBA AES ===")
 
     texto = "Hola Mundo"
@@ -174,7 +174,7 @@ if __name__ == "__main__":
     texto_descifrado = decrypt_aes(texto_cifrado, nonce, tag, clave)
     print("Texto descifrado:", texto_descifrado)
 
-
+    
     print("\n=== PRUEBA HASH ===")
 
     password = "Password123!"
@@ -186,3 +186,4 @@ if __name__ == "__main__":
     # Cuando implementen verify_password:
     print("Verificación correcta:",
          verify_password("Password123!", pwd_data))
+    '''

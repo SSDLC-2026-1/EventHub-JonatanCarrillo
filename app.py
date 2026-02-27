@@ -25,6 +25,15 @@ from validation import (
     validate_login_input,
 )
 
+from encryption import (
+    hash_password,
+    verify_password,
+    encrypt_aes,
+    decrypt_aes
+)
+
+global_key = b'sixteen byte key'  # Clave de 16 bytes para AES-128
+
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.secret_key = "dev-secret-change-me"
@@ -305,7 +314,7 @@ def login():
         ), 403
 
     user = find_user_by_email(email_clean)
-    if not user or user.get("password") != password_raw:
+    if not user or not verify_password(password_raw, user.get("password")):
         register_failed_attempt(email_clean)
         return render_template(
             "login.html",
@@ -321,6 +330,12 @@ def login():
     session["login_at"] = time()   
 
     return redirect(url_for("dashboard"))
+=======
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -379,13 +394,13 @@ def register():
 
     users = load_users()
     next_id = (max([u.get("id", 0) for u in users], default=0) + 1)
-
+    
     users.append({
         "id": next_id,
         "full_name": clean["full_name"],
         "email": clean["email"],
-        "phone": clean["phone"],
-        "password": clean["password"],
+        "phone": encrypt_aes(clean["phone"], global_key),
+        "password": hash_password(clean["password"]),
         "role": "user",
         "status": "active",
         "locked_until": "",
@@ -448,9 +463,9 @@ def checkout(event_id: int):
     form_data = {
         "exp_date": clean.get("exp_date", ""),
         "name_on_card": clean.get("name_on_card", ""),
-        "billing_email": clean.get("billing_email", ""),
-        "card_number": masked_display,
-    }      
+        "billing_email": encrypt_aes(clean.get("billing_email", ""), global_key),
+        "card_number": masked_display,   
+    }
 
     if errors:
         return render_template(
