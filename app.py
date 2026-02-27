@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from flask import Flask, render_template, request, abort, url_for, redirect, session
 from pathlib import Path
 import json
+from time import time
+
+
+SESSION_TIMEOUT = 30 
 
 from validation import (
     validate_payment_form,
@@ -202,6 +206,21 @@ def _field_msg(field: str) -> str:
     }
     return msgs.get(field, "Campo inválido.")
 
+def is_session_expired():
+    login_at = session.get("login_at")
+    if not login_at:
+        return True
+    return (time() - login_at) > SESSION_TIMEOUT
+
+@app.before_request
+def enforce_session_timeout():
+    protected_paths = ("/dashboard", "/checkout", "/admin_users", "/profile", "/admin", )
+
+    if request.path.startswith(protected_paths):
+        if "user_email" not in session or is_session_expired():
+            session.clear()
+            return redirect(url_for("login"))
+
 
 @app.get("/")
 def index():
@@ -261,6 +280,8 @@ def buy_ticket(event_id: int):
     return redirect(url_for("checkout", event_id=event.id, qty=qty))
 
 
+from time import time
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
@@ -302,14 +323,19 @@ def login():
             form={"email": email_raw},
         ), 401
 
+    
     register_successful_login(email_clean)
-    session["user_email"] = email_clean
-    return redirect(url_for("dashboard"))
 
+    session["user_email"] = email_clean
+    session["login_at"] = time()   
+
+    return redirect(url_for("dashboard"))
+=======
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -430,11 +456,15 @@ def checkout(event_id: int):
         billing_email=billing_email
     )
 
+    cn = clean.get("card_number", "")
+    last4 = cn[-4:] if cn else ""
+    masked_display = f"**** **** **** {last4}" if last4 else ""
+
     form_data = {
         "exp_date": clean.get("exp_date", ""),
         "name_on_card": clean.get("name_on_card", ""),
         "billing_email": encrypt_aes(clean.get("billing_email", ""), global_key),
-        "card": clean.get("card", "")
+        "card_number": masked_display,   
     }
 
     if errors:
@@ -447,10 +477,11 @@ def checkout(event_id: int):
 
     orders = load_orders()
     order_id = next_order_id(orders)
+    user = get_current_user()
 
     orders.append({
         "id": order_id,
-        "user_email": form_data["billing_email"], 
+        "user_email": user.get("email"),
         "event_id": event.id,
         "event_title": event.title,
         "qty": qty,
@@ -458,11 +489,12 @@ def checkout(event_id: int):
         "service_fee": service_fee,
         "total": total,
         "status": "PAID",
-        "created_at": datetime.utcnow().isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
         "payment": form_data
     })
 
     save_orders(orders)
+    del cvv # no se guarda en .json pero lo borramos por si acaso
     return redirect(url_for("dashboard", paid="1"))
 
 
