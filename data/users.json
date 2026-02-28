@@ -19,7 +19,7 @@
   },
   {
     "id": 3,
-    "full_name": "pepe",
+    "full_name": "admin_prueba",
     "email": "pepeprueba@test.com",
     "phone": [
       "73af7d20e10d14735970",
@@ -32,8 +32,9 @@
       "salt": "dc2b0a4b78175afec736f59333b244bd",
       "hash": "bfbc25bb23d24e776f6cad0d99af49ec2ed6d910140d2d2ad642c49df67893c8"
     },
-    "role": "user",
+    "role": "admin",
     "status": "active",
     "locked_until": ""
   }
 ]
+
