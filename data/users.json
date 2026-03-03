@@ -19,12 +19,12 @@
   },
   {
     "id": 3,
-    "full_name": "admin_prueba",
+    "full_name": "admin prueba",
     "email": "pepeprueba@test.com",
     "phone": [
-      "73af7d20e10d14735970",
-      "bd08e075e858b1474978b0ac09029825",
-      "be1ea884f4ea05f2679d9179dc3d18bf"
+      "b87eaf2aa9d27621d41a",
+      "db5909fcc8f365c72ee438a5b5ee07a7",
+      "c02ff96dc99b8681b1031bddf9457025"
     ],
     "password": {
       "algorithm": "pbkdf2_sha256",
@@ -35,6 +35,24 @@
     "role": "admin",
     "status": "active",
     "locked_until": ""
+  },
+  {
+    "id": 4,
+    "full_name": "pepa prueba",
+    "email": "pepaprueba@test.com",
+    "phone": [
+      "f3f405cb0fbed5fabe1d",
+      "12f8b3252edd6972a84cfad09f542b62",
+      "b1844a9078aa0eec8b28e53fdf6361e7"
+    ],
+    "password": {
+      "algorithm": "pbkdf2_sha256",
+      "iterations": 200000,
+      "salt": "439ff95b4bee9201ae0f406cd6ae3976",
+      "hash": "c12e6eaa82501b5b65d43aa13bf231f3d3f1a5e9dfa353ad5a384d192a7087dd"
+    },
+    "role": "user",
+    "status": "active",
+    "locked_until": ""
   }
 ]
-
