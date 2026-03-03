@@ -10,7 +10,7 @@ import json
 from time import time
 
 
-SESSION_TIMEOUT = 30 
+SESSION_TIMEOUT = 180 
 
 from validation import (
     validate_payment_form,
