@@ -61,6 +61,13 @@ class Event:
     description: str
 
 
+def admin_required():
+    user = get_current_user()
+    if not user:
+        abort(401) 
+    if user.get("role") != "admin":
+        abort(403)  
+
 def _user_with_defaults(u: dict) -> dict:
     u = dict(u)
     u.setdefault("role", "user")
@@ -214,7 +221,7 @@ def is_session_expired():
 
 @app.before_request
 def enforce_session_timeout():
-    protected_paths = ("/dashboard", "/checkout", "/admin_users", "/profile", "/admin", )
+    protected_paths = ("/dashboard", "/checkout", "/admin/users", "/profile", "/admin", )
 
     if request.path.startswith(protected_paths):
         if "user_email" not in session or is_session_expired():
@@ -590,6 +597,7 @@ def profile():
 
 @app.get("/admin/users")
 def admin_users():
+    admin_required()
     q = (request.args.get("q") or "").strip().lower()
     role = (request.args.get("role") or "all").strip().lower()
     status = (request.args.get("status") or "all").strip().lower()
@@ -627,6 +635,7 @@ def admin_users():
 
 @app.post("/admin/users/<int:user_id>/toggle")
 def admin_toggle_user(user_id: int):
+    admin_required()
     users = load_users()
     for u in users:
         if int(u.get("id", 0)) == user_id:
@@ -639,6 +648,7 @@ def admin_toggle_user(user_id: int):
 
 @app.post("/admin/users/<int:user_id>/role")
 def admin_change_role(user_id: int):
+    admin_required()
     new_role = request.form.get("role", "user")
 
     users = load_users()
