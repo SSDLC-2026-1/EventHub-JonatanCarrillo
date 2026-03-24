@@ -1,1 +1,53 @@
-# code
+name: Validate EventHub Structure
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate required files and directories
+        run: |
+          echo "Validating required files and directories..."
+
+          # Archivos obligatorios
+          REQUIRED_FILES=(
+            "app.py"
+            "requirements.txt"
+            "data/users.json"
+            "data/events.json"
+            "data/orders.json"
+          )
+
+          # Carpetas obligatorias
+          REQUIRED_DIRS=(
+            "templates"
+            "static"
+            "data"
+          )
+
+          # Verificar archivos
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "ERROR: Missing file -> $file"
+              exit 1
+            else
+              echo "OK: Found file -> $file"
+            fi
+          done
+
+          # Verificar directorios
+          for dir in "${REQUIRED_DIRS[@]}"; do
+            if [ ! -d "$dir" ]; then
+              echo "ERROR: Missing directory -> $dir"
+              exit 1
+            else
+              echo "OK: Found directory -> $dir"
+            fi
+          done
