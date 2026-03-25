@@ -6,6 +6,7 @@ permissions:
   pull-requests: write
 jobs:
   validate:
+    name: EventHub Structure Validation 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
