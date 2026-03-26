@@ -1,0 +1,22 @@
+name: Manual greeting workflow
+
+on: 
+  workflow_dispatch:
+    inputs:
+      nombre: 
+        description: 'Nombre de la persona a saludar'
+        required: true
+        type: string
+        default: 'Estudiante
+jobs: 
+  saludar: 
+  runs-on: ubuntu-latest
+  steps:
+    - name: Mostrar saludo
+      run: echo "Hola, ${{ inputs,nombre }}!"
+    - name: Mostrar confirmación
+      run: echo "El workflow fue ejecutado manualmente"
+    - name: Mostrar inoput recibido
+      run: echo "Nombre recibido: ${{ inputs,nombre }}!"
+    - name: Fin del workflow
+      run: echo "Proceso completado"
