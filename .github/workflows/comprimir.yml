@@ -1,4 +1,4 @@
-name: Python package
+name: Comprimir
 on:
   workflow_dispatch:
     inputs:
@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: fullstack
         if : ${{inputs.sol == 'full' }}
-        run: zip -r repo.zip7
+        run: zip -r repo.zip
       - name: front
         if : ${{inputs.sol == 'front' }}
         run: zip -r templates.zip templates/
