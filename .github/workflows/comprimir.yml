@@ -1,0 +1,29 @@
+name: Python package
+on:
+  workflow_dispatch:
+    inputs:
+      sol:
+        description: "Selecciona que parte seleccionar"
+        required: true
+        type: choice
+        options:
+          - full
+          - front
+          - back
+          - data
+jobs:
+  punto:
+    runs-on: ubuntu-latest
+    steps:
+      - name: fullstack
+        if : ${{inputs.sol == 'full' }}
+        run: echo "fullstack"
+      - name: front
+        if : ${{inputs.sol == 'front' }}
+        run: echo "frontstack"
+      - name: back
+        if : ${{inputs.sol == 'back' }}
+        run: echo "frontstack"
+      - name: data
+        if : ${{inputs.sol == 'data' }}
+        run: echo "frontstack"
