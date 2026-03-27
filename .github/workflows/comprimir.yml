@@ -15,6 +15,8 @@ jobs:
   punto:
     runs-on: ubuntu-latest
     steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
       - name: fullstack
         if : ${{inputs.sol == 'full' }}
         run: zip -r repo.zip . -x "*.git*"
