@@ -54,5 +54,14 @@
     "role": "user",
     "status": "active",
     "locked_until": ""
+  },
+    {
+    "id": 5,
+    "full_name": "sara",
+    "email": "test@tes.com",
+    "phone": "3001111112",
+    "password": "aaa114",
+    "role": "admin",
+    "status": "active"
   }
 ]
